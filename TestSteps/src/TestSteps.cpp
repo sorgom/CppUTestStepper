@@ -3,13 +3,14 @@
 #include <CppUTest/Utest.h>
 #include <cstdio>
 #include <cstring>
+#include <ciso646>
 
 using std::printf;
 using std::memset;
 
 bool TestSteps::mDone = false;
-unsigned char TestSteps::mLevel = 0;
-unsigned char TestSteps::mShow = 0;
+TestSteps::StepLevelT TestSteps::mLevel = 0;
+TestSteps::StepLevelT TestSteps::mShow = 0;
 
 const char* const TestSteps::c__step = "STEP(";
 const char* const TestSteps::c__pre = "PRE";
@@ -29,7 +30,7 @@ void TestSteps::clear()
     enterLevel(0, 0, 0, 0);
 }
 
-void TestSteps::show(const unsigned char trcLevel)
+void TestSteps::show(const StepLevelT trcLevel)
 {
     mShow = trcLevel;
     if (isShowing())
@@ -38,9 +39,9 @@ void TestSteps::show(const unsigned char trcLevel)
     }
 }
 
-void TestSteps::clearLevel(const unsigned char level)
+void TestSteps::clearLevel(const StepLevelT level)
 {
-    for (unsigned char l = level; l < cNmuLevels; ++l)
+    for (StepLevelT l = level; l < cNmuLevels; ++l)
     {
         memset(&mTrace[l], 0, sizeof(Trace));
         mTrace[l].step = cStepNone;
@@ -52,9 +53,9 @@ void TestSteps::clearLevel(const unsigned char level)
 }
 
 void TestSteps::enterLevel(
-    const unsigned char level,
+    const StepLevelT level,
     const char* const file,
-    const unsigned short line,
+    const TestLineT line,
     const char* const func
 )
 {
@@ -69,9 +70,9 @@ void TestSteps::enterLevel(
 }
 
 void TestSteps::step(
-    const unsigned short step,
+    const TestStepT step,
     const char* const file,
-    const unsigned short line,
+    const TestLineT line,
     const char* const func
 )
 {
@@ -92,7 +93,7 @@ void TestSteps::step(
     }
 }
 
-void TestSteps::setLine(const unsigned short line)
+void TestSteps::setLine(const TestLineT line)
 {
     UtestShell::getCurrent()->setLineNumber(line);
     mTrace[mLevel].line = line;
@@ -100,7 +101,7 @@ void TestSteps::setLine(const unsigned short line)
 
 void TestSteps::subSteps(
     const char* const file,
-    const unsigned short line,
+    const TestLineT line,
     const char* const func
 )
 {
@@ -122,7 +123,7 @@ bool TestSteps::subStepsDone()
 void TestSteps::out()
 {
     printf(c__step);
-    for (unsigned char l = 0; l < cNmuLevels; ++l)
+    for (StepLevelT l = 0; l < cNmuLevels; ++l)
     {
         const Trace& trc = mTrace[l];
         if (trc.step != cStepNone)
@@ -144,7 +145,7 @@ void TestSteps::trace(const bool insertLine)
         printf("\n");
     }
 
-    for (unsigned char l = 0; l < cNmuLevels; ++l)
+    for (StepLevelT l = 0; l < cNmuLevels; ++l)
     {
         const Trace& trc = mTrace[l];
         if (trc.step != cStepNone)
@@ -195,7 +196,7 @@ void TestSteps::chk(const bool ok, const char* const msg)
     }
 }
 
-void TestSteps::stepOut(const unsigned short step)
+void TestSteps::stepOut(const TestStepT step)
 {
     if (step == cStepPre)
     {

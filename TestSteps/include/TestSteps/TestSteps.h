@@ -58,11 +58,16 @@
 class TestSteps
 {
 public:
+    typedef unsigned TestStepT;
+    typedef unsigned short TestLineT;
+    typedef unsigned char StepLevelT;
+
+
     //  clear test steps
     static void clear();
 
     //  switch on tracing of test steps
-    static void show(unsigned char trcLevel = 1);
+    static void show(StepLevelT trcLevel = 1);
 
     //  switch on tracing of test steps for all levels
     inline static void showAll() { mShow = cNmuLevels; }
@@ -76,14 +81,14 @@ public:
     //  begin set of steps
     static void subSteps(
         const char* const file,
-        unsigned short line,
+        TestLineT line,
         const char* const func
     );
 
     //  assign precondition with current level / set of steps
     inline static void precondition(
         const char* const file,
-        unsigned short line,
+        TestLineT line,
         const char* const func
     )
     {
@@ -92,14 +97,14 @@ public:
 
     //  assign a step with current level / set of steps
     static void step(
-        unsigned short step,
+        TestStepT step,
         const char* const file,
-        unsigned short line,
+        TestLineT line,
         const char* const func
     );
 
     //  set (more precise) line within current test step
-    static void setLine(unsigned short line);
+    static void setLine(TestLineT line);
 
     //  end set of steps
     //  required
@@ -113,14 +118,14 @@ private:
     {
         const char* file;
         const char* func;
-        unsigned line;
-        unsigned step;
+        TestLineT line;
+        TestStepT step;
     };
 
-    static const unsigned char cNmuLevels = 20;
-    static const unsigned char cMaxLevel  = cNmuLevels - 1;
-    static const unsigned short cStepPre  = ~ 0 - 1;
-    static const unsigned short cStepNone = ~ 0;
+    static const StepLevelT cNmuLevels = 20;
+    static const StepLevelT cMaxLevel  = cNmuLevels - 1;
+    static const TestStepT cStepNone = ~ 0u;
+    static const TestStepT cStepPre = cStepNone - 1;
 
     //  level traces
     static Trace mTrace[cNmuLevels];
@@ -136,15 +141,15 @@ private:
     static const char* const c__ErrEndSteps;
 
     static bool mDone;
-    static unsigned char mLevel;
-    static unsigned char mShow;
+    static StepLevelT mLevel;
+    static StepLevelT mShow;
 
-    static void clearLevel(unsigned char level);
+    static void clearLevel(StepLevelT level);
 
     static void enterLevel(
-        unsigned char level,
+        StepLevelT level,
         const char* const file,
-        unsigned short line,
+        TestLineT line,
         const char* const func
     );
 
@@ -162,7 +167,7 @@ private:
     static void chk(bool ok, const char* msg = c__ErrTestSteps);
 
     //  step or precondition output
-    static void stepOut(unsigned short step);
+    static void stepOut(TestStepT step);
 
     //  Standard 8.1.1
     TestSteps();
