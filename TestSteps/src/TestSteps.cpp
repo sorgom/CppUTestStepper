@@ -95,7 +95,7 @@ void TestSteps::step(
 
 void TestSteps::setLine(const TestLineT line)
 {
-    UtestShell::getCurrent()->setLineNumber(line);
+    // UtestShell::getCurrent()->setLineNumber(line);
     mTrace[mLevel].line = line;
 }
 
