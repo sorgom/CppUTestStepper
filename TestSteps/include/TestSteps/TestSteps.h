@@ -21,8 +21,6 @@
 //  created by Manfred Sorgo
 
 #pragma once
-#ifndef TESTSTEPPER_H
-#define TESTSTEPPER_H
 
 #include <CppUTest/UtestMacros.h>
 
@@ -183,7 +181,3 @@ private:
 #else
 #define __STEPPER_FUNCTION__ __func__
 #endif
-
-
-#endif // _H
-

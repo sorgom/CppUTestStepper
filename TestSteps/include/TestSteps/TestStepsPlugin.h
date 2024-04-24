@@ -4,8 +4,6 @@
 //  created by Manfred Sorgo
 
 #pragma once
-#ifndef TESTSTEPPERPLUGIN_H
-#define TESTSTEPPERPLUGIN_H
 
 #include <CppUTestExt/MockSupportPlugin.h>
 
@@ -60,5 +58,3 @@ private:
     TestStepsPlugin(const TestStepsPlugin& o);
     TestStepsPlugin& operator = (const TestStepsPlugin& o);
 };
-
-#endif // _H
