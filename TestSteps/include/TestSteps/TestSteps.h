@@ -1,7 +1,7 @@
 //  ============================================================
 //  The test stepper
 //  solves a great disadvantage of CppUTest:
-//  
+//
 //  when CppUTest exits a test due to an unmatched expectation
 //  it only provides
 //  - the test name
@@ -12,7 +12,7 @@
 //
 //  using TestSteps's STEP() macro
 //  will provide you with line of the last STEP() macro placed
-//  
+//
 //  the STEP() macro also helps
 //  to give your tests a more readable structure
 //
@@ -20,7 +20,8 @@
 //  ============================================================
 //  created by Manfred Sorgo
 
-#pragma once
+#ifndef TESTSTEPS_H
+#define TESTSTEPS_H
 
 #include <CppUTest/UtestMacros.h>
 
@@ -181,3 +182,4 @@ private:
 #else
 #define __STEPPER_FUNCTION__ __func__
 #endif
+#endif // _H
