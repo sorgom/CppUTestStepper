@@ -58,7 +58,7 @@ class TestSteps
 {
 public:
     typedef unsigned TestStepT;
-    typedef unsigned short TestLineT;
+    typedef unsigned TestLineT;
     typedef unsigned char StepLevelT;
 
 
