@@ -47,6 +47,7 @@
 #define L_CHECK_FALSE(actual) L_CHECK_EQUAL(false, actual)
 //  equal size of two types / structs / classes
 #define L_CHECK_EQUAL_SIZE(T1, T2) L_CHECK_EQUAL(sizeof(T1), sizeof(T2))
+#define L_STRCMP_EQUAL(expected, actual) TestSteps::setLine(__LINE__); STRCMP_EQUAL(expected, actual);
 
 //  steps / substeps output during test
 #define TS_SHOW(level) TestSteps::show(level);
