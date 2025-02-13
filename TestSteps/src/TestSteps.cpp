@@ -1,12 +1,12 @@
 
 #include <TestSteps/TestSteps.h>
 #include <CppUTest/Utest.h>
-#include <cstdio>
-#include <cstring>
 #include <ciso646>
+#include <cstring>
+#include <iostream>
 
-using std::printf;
 using std::memset;
+using std::cout;
 
 bool TestSteps::mDone = false;
 TestSteps::StepLevelT TestSteps::mLevel = 0;
@@ -14,15 +14,17 @@ TestSteps::StepLevelT TestSteps::mShow = 0;
 
 const char* const TestSteps::c__step = "STEP(";
 const char* const TestSteps::c__pre = "PRE";
-const char* const TestSteps::c__printFile = "file: %s\n";
-const char* const TestSteps::c__printFunc = "func: %s\n";
-const char* const TestSteps::c__printLine = "line: %d\n";
+const char* const TestSteps::c__file = "file: ";
+const char* const TestSteps::c__func = "func: ";
+const char* const TestSteps::c__line = "line: ";
 const char* const TestSteps::c__ErrTestSteps = "TestSteps error";
 const char* const TestSteps::c__ErrStep = "TestSteps: STEP(n) n must be greater 0.";
 const char* const TestSteps::c__ErrSubSteps = "TestSteps: SUBSTEPS error. Did you forget ENDSTEPS?";
 const char* const TestSteps::c__ErrEndSteps = "TestSteps: ENDSTEPS error. Did you forget SUBSTEPS?";
 
 TestSteps::Trace TestSteps::mTrace[cNmuLevels] = {0};
+NullStream TestSteps::mNullStream;
+
 
 void TestSteps::clear()
 {
@@ -35,7 +37,7 @@ void TestSteps::show(const StepLevelT trcLevel)
     mShow = trcLevel;
     if (isShowing())
     {
-        printf(")\n");
+        cout << '\n';
     }
 }
 
@@ -73,7 +75,8 @@ void TestSteps::step(
     const TestStepT step,
     const char* const file,
     const TestLineT line,
-    const char* const func
+    const char* const func,
+    const bool nl
 )
 {
     UtestShell::getCurrent()->setLineNumber(line);
@@ -89,13 +92,25 @@ void TestSteps::step(
     mDone = true;
     if (mShow > mLevel)
     {
-        out();
+        out(nl);
     }
 }
 
+std::ostream& TestSteps::cstep(
+    const TestStepT cstep,
+    const char* const file,
+    const TestLineT line,
+    const char* const func
+)
+{
+    const bool show = mShow > mLevel;
+    step(cstep, file, line, func, not show);
+    return show ? std::cout << ' ' : mNullStream;
+}
+
+
 void TestSteps::setLine(const TestLineT line)
 {
-    // UtestShell::getCurrent()->setLineNumber(line);
     mTrace[mLevel].line = line;
 }
 
@@ -120,9 +135,9 @@ bool TestSteps::subStepsDone()
     return mTrace[1].step != cStepNone;
 }
 
-void TestSteps::out()
+void TestSteps::out(const bool nl)
 {
-    printf(c__step);
+    cout << c__step;
     for (StepLevelT l = 0; l < cNmuLevels; ++l)
     {
         const Trace& trc = mTrace[l];
@@ -130,19 +145,23 @@ void TestSteps::out()
         {
             if (l > 0)
             {
-                printf(".");
+                cout << '.';
             }
             stepOut(trc.step);
         }
     }
-    printf(")\n");
+    cout << ')';
+    if (nl)
+    {
+        cout << '\n';
+    }
 }
 
 void TestSteps::trace(const bool insertLine)
 {
     if (insertLine)
     {
-        printf("\n");
+        cout << '\n';
     }
 
     for (StepLevelT l = 0; l < cNmuLevels; ++l)
@@ -152,20 +171,20 @@ void TestSteps::trace(const bool insertLine)
         {
             if (l > 0)
             {
-                printf("\n");
+                cout << '\n';
             }
-            printf(c__step);
+            cout << c__step;
             stepOut(trc.step);
-            printf(")\n");
+            cout << ")\n";
             if (trc.file != 0)
             {
-                printf(c__printFile, trc.file);
+                cout << c__file << trc.file << '\n';
             }
             if (trc.func != 0)
             {
-                printf(c__printFunc, trc.func);
+                cout << c__func << trc.func << '\n';
             }
-            printf(c__printLine, trc.line);
+            cout << c__line << trc.line << '\n';
         }
     }
 }
@@ -200,10 +219,10 @@ void TestSteps::stepOut(const TestStepT step)
 {
     if (step == cStepPre)
     {
-        printf(c__pre);
+        cout << c__pre;
     }
     else
     {
-        printf("%d", step);
+        cout << step;
     }
 }
