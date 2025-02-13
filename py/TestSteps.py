@@ -22,7 +22,7 @@ rxHead = re.compile(r'^(( *)//[^\n]*(?:\n\2//[^\n]*)+)(\n\2TEST\b)', re.M)
 rxFunc = re.compile(r'^(( *)(?:TEST|(?:\w+ +)+\w+) *\([^\n]*\n\2)(\{\n.*?\n\2\})', re.M | re.S)
 
 # step replacement
-rdStep = r'STEP *\( *\d+ *\)'
+rdStep = r'(C?STEP) *\( *\d+ *(,.*?)?\)'
 rxStepFunc = re.compile(r'^( *)' + rdStep, re.M)
 rxStepHead = re.compile(rf'^( *//!? +)' + rdStep, re.M)
 
@@ -52,7 +52,7 @@ class Counter(object):
 class replStep(object):
     def nextStep(self, mo):
         self.step += 1
-        return mo.group(1) + f'STEP({self.step})'
+        return f'{mo.group(1)}{mo.group(2)}({self.step}{mo.group(3) or ''})'
     
     def doSteps(self, cont, rx:re.Pattern):
         self.step = 0

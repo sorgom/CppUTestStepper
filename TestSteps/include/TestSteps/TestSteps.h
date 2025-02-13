@@ -23,6 +23,7 @@
 #ifndef TESTSTEPS_H
 #define TESTSTEPS_H
 
+#include <TestSteps/NullStream.h>
 #include <CppUTest/UtestMacros.h>
 
 //  assign precondition / setup
@@ -31,6 +32,9 @@
 
 //  place a step
 #define STEP(n) TestSteps::step(n, __FILE__, __LINE__, __STEPPER_FUNCTION__);
+
+// place a step with comment
+#define CSTEP(n, MSG) TestSteps::cstep(n, __FILE__, __LINE__, __STEPPER_FUNCTION__) << MSG << '\n';
 
 //  begin set of steps including precondition
 #define SUBSTEPS() TestSteps::subSteps(__FILE__, __LINE__, __STEPPER_FUNCTION__);
@@ -70,7 +74,7 @@ public:
     static void show(StepLevelT trcLevel = 1);
 
     //  switch on tracing of test steps for all levels
-    inline static void showAll() { mShow = cNmuLevels; }
+    inline static void showAll() { show(cNmuLevels); }
 
     //  switch off tracing of test steps (default)
     inline static void hide() { mShow = 0; }
@@ -97,6 +101,14 @@ public:
 
     //  assign a step with current level / set of steps
     static void step(
+        TestStepT step,
+        const char* const file,
+        TestLineT line,
+        const char* const func,
+        bool nl = true
+    );
+
+    static std::ostream& cstep(
         TestStepT step,
         const char* const file,
         TestLineT line,
@@ -132,9 +144,9 @@ private:
 
     static const char* const c__step;
     static const char* const c__pre;
-    static const char* const c__printFile;
-    static const char* const c__printFunc;
-    static const char* const c__printLine;
+    static const char* const c__file;
+    static const char* const c__func;
+    static const char* const c__line;
     static const char* const c__ErrTestSteps;
     static const char* const c__ErrStep;
     static const char* const c__ErrSubSteps;
@@ -157,7 +169,7 @@ private:
     static bool subStepsDone();
 
     //  output of last step
-    static void out();
+    static void out(bool nl = true);
 
     //  "stack trace"
     static void trace(bool insertLine = false);
@@ -168,6 +180,8 @@ private:
 
     //  step or precondition output
     static void stepOut(TestStepT step);
+
+    static NullStream mNullStream;
 
     //  Standard 8.1.1
     TestSteps();
