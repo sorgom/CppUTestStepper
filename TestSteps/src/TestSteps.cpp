@@ -2,7 +2,6 @@
 #include <TestSteps/TestSteps.h>
 #include <CppUTest/Utest.h>
 #include <ciso646>
-// #include <cstdio>
 #include <cstring>
 #include <iostream>
 
